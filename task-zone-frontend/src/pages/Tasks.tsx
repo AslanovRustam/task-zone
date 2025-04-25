@@ -1,9 +1,9 @@
 import { useEffect, type FC } from "react";
 import { useDispatch } from "react-redux";
+import { Paper, Typography } from "@mui/material";
 import type { AppDispatch } from "../store";
 import { fetchAllTasks } from "../store/task/operations";
 import TaskList from "../components/TaskList";
-import { Paper, Typography } from "@mui/material";
 
 interface TasksProps {}
 

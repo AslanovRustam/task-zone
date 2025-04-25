@@ -8,4 +8,5 @@
   align-items: center;
   justify-content: center;
   background-color: hsla(0, 0%, 0%, 0.696);
+  z-index: 2;
 }

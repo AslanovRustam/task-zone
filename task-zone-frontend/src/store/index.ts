@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import taskReducer from "./task/taskSlice";
+import commentsReducer from "./comments/commentsSlice";
 
 export const store = configureStore({
   reducer: {
     tasks: taskReducer,
+    comments: commentsReducer,
   },
 });
 

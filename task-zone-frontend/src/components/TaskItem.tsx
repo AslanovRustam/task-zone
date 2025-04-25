@@ -17,7 +17,6 @@ interface TaskItemProps {
 const TaskItem: FC<TaskItemProps> = ({ task, taskNumber }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [localTask, setLocalTask] = useState<Task>(task);
   const isLoading = useSelector(selectIsLoading);
   const navigate = useNavigate();
 
@@ -92,14 +91,10 @@ const TaskItem: FC<TaskItemProps> = ({ task, taskNumber }) => {
         </TableRow>
       )}
       <TaskModal open={editOpen} onClose={toggleEditModal}>
-        <EditTask
-          onClose={toggleEditModal}
-          localTask={localTask}
-          setLocalTask={setLocalTask}
-        />
+        <EditTask onClose={toggleEditModal} task={task} />
       </TaskModal>
       <TaskModal open={deleteOpen} onClose={handleTaskDeleteModal}>
-        <DeleteTask onClose={handleTaskDeleteModal} localTask={localTask} />
+        <DeleteTask onClose={handleTaskDeleteModal} task={task} />
       </TaskModal>
     </>
   );

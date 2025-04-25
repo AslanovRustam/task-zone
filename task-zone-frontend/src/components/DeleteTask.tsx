@@ -8,23 +8,28 @@ import { deleteTask } from "../store/task/operations";
 
 interface DeleteTaskProps {
   onClose: () => void;
-  localTask: Task;
+  task: Task;
 }
 
-const DeleteTask: FC<DeleteTaskProps> = ({ onClose, localTask }) => {
+const DeleteTask: FC<DeleteTaskProps> = ({ onClose, task }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async () => {
-    await dispatch(deleteTask(localTask.id!));
-    toast.error("Task deleted successfully");
-    onClose();
+    try {
+      await dispatch(deleteTask(task.id!));
+      toast.success("Task deleted successfully");
+    } catch (error) {
+      toast.error("Task is not deleted!");
+    } finally {
+      onClose();
+    }
   };
   return (
     <Box display="flex" flexDirection="column" gap={3}>
       <Typography variant="h6" component="p">
         Are you sure you want to delete the task{" "}
         <Box component="span" fontWeight={600}>
-          "{localTask.name}"
+          "{task.name}"
         </Box>
         ?
       </Typography>

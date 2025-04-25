@@ -1,6 +1,7 @@
 import { createSlice, isPending, isRejected } from "@reduxjs/toolkit";
 import type { PayloadAction, UnknownAction } from "@reduxjs/toolkit";
 import {
+  addComment,
   createTask,
   deleteTask,
   fetchAllTasks,
@@ -13,12 +14,14 @@ export interface InitialState {
   items: Task[];
   loading: boolean;
   error: string | null;
+  currentTask: Task | null;
 }
 
 const initialState: InitialState = {
   items: [] as Task[],
   loading: false,
   error: null,
+  currentTask: null,
 };
 
 const handlePending = (state: InitialState): void => {
@@ -39,11 +42,20 @@ const handleRejected = (
 export const taskSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    updateCurrentTask(state, { payload }) {
+      state.currentTask = { ...payload };
+    },
+  },
   extraReducers: (builder) => {
     //get all tasks
     builder.addCase(fetchAllTasks.fulfilled, (state, { payload }) => {
       state.items = payload;
+      state.loading = false;
+    });
+    //get task by ID
+    builder.addCase(fetchTaskById.fulfilled, (state, { payload }) => {
+      state.currentTask = payload;
       state.loading = false;
     });
     //update task
@@ -67,6 +79,11 @@ export const taskSlice = createSlice({
       state.items = payload;
       state.loading = false;
     });
+    //add comment
+    builder.addCase(addComment.fulfilled, (state, { payload }) => {
+      state.currentTask = payload;
+      state.loading = false;
+    });
     // matchers for pending and rejected
     builder.addMatcher(
       isPending(
@@ -74,7 +91,8 @@ export const taskSlice = createSlice({
         updateTask,
         deleteTask,
         createTask,
-        fetchTaskById
+        fetchTaskById,
+        addComment
       ),
       handlePending
     );
@@ -85,11 +103,13 @@ export const taskSlice = createSlice({
         updateTask,
         deleteTask,
         createTask,
-        fetchTaskById
+        fetchTaskById,
+        addComment
       ),
       handleRejected
     );
   },
 });
 
+export const { updateCurrentTask } = taskSlice.actions;
 export default taskSlice.reducer;

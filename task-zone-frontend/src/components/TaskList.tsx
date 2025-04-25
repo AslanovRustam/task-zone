@@ -15,14 +15,12 @@ import TaskItem from "./TaskItem";
 import TaskModal from "./TaskModal";
 import EditTask from "./EditTask";
 import PaginationCmp from "./PaginationCmp";
-import { Task } from "../types/types";
 import { DEFAULT_TASK } from "../constants";
 
 interface TaskListProps {}
 
 const TaskList: FC<TaskListProps> = () => {
   const [open, setOpen] = useState(false);
-  const [task, setTask] = useState<Task>(DEFAULT_TASK);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const tasks = useSelector(selectAllTasks);
@@ -96,12 +94,7 @@ const TaskList: FC<TaskListProps> = () => {
       />
 
       <TaskModal open={open} onClose={toggleModal}>
-        <EditTask
-          onClose={toggleModal}
-          localTask={task}
-          setLocalTask={setTask}
-          newTaks
-        />
+        <EditTask onClose={toggleModal} task={DEFAULT_TASK} newTask />
       </TaskModal>
     </>
   );

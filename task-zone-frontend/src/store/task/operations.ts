@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Task } from "../../types/types";
+import { Comment, Task } from "../../types/types";
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: "http://localhost:3000/api",
 });
 
@@ -71,6 +71,23 @@ export const createTask = createAsyncThunk(
   async (payload: Partial<Task>, thunkAPI) => {
     try {
       const response = await instance.post(`/tasks`, {
+        ...payload,
+      });
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const addComment = createAsyncThunk(
+  "comment/add",
+  async (payload: Partial<Comment>, thunkAPI) => {
+    try {
+      const response = await instance.post(`/comments`, {
         ...payload,
       });
 

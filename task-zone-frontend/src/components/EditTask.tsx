@@ -1,5 +1,5 @@
-import type { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
-import { useDispatch } from "react-redux";
+import { useState, type ChangeEvent, type FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Button,
@@ -13,21 +13,20 @@ import { AppDispatch } from "../store";
 import { createTask, updateTask } from "../store/task/operations";
 import { Task, STATUS } from "../types/types";
 import { DEFAULT_TASK } from "../constants";
+import { toast } from "react-toastify";
+import { updateCurrentTask } from "../store/task/taskSlice";
+import { selectIsLoading } from "../store/selectors";
 
 interface EditTaskProps {
   onClose: () => void;
-  localTask: Task;
-  setLocalTask: Dispatch<SetStateAction<Task>>;
-  newTaks?: boolean;
+  task: Task;
+  newTask?: boolean;
 }
 
-const EditTask: FC<EditTaskProps> = ({
-  onClose,
-  localTask,
-  setLocalTask,
-  newTaks,
-}) => {
+const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [localTask, setLocalTask] = useState<Task>(task);
+  const isLoading = useSelector(selectIsLoading);
 
   const handleChange =
     (field: keyof Task) =>
@@ -41,19 +40,30 @@ const EditTask: FC<EditTaskProps> = ({
       if (field === "isDone" && "checked" in e.target) {
         value = e.target.checked;
       }
-
-      setLocalTask((prev) => ({ ...prev, [field]: value }));
+      setLocalTask((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
     };
 
-  const handleSubmit = () => {
-    if (newTaks) {
-      dispatch(createTask(localTask));
-      setLocalTask(DEFAULT_TASK);
+  const handleSubmit = async () => {
+    try {
+      if (newTask) {
+        await dispatch(createTask(localTask)).unwrap();
+        dispatch(updateCurrentTask(localTask));
+        setLocalTask(DEFAULT_TASK);
+        return;
+      }
+
+      await dispatch(
+        updateTask({ id: localTask.id!, data: localTask })
+      ).unwrap();
+      dispatch(updateCurrentTask(localTask));
+    } catch (e) {
+      toast.error("Failed to save task");
+    } finally {
       onClose();
-      return;
     }
-    dispatch(updateTask({ id: localTask.id!, data: localTask }));
-    onClose();
   };
 
   return (
@@ -90,7 +100,7 @@ const EditTask: FC<EditTaskProps> = ({
       </Box>
 
       <Box display="flex" justifyContent="space-between">
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button variant="contained" onClick={handleSubmit} disabled={isLoading}>
           Save
         </Button>
         <Button variant="contained" color="error" onClick={onClose}>

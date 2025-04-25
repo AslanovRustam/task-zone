@@ -1,15 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
+import { Task } from 'src/task/task.schema';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Comment {
-  @Prop({ required: true })
-  name: string;
+  @Prop({ default: 'Anonymous' })
+  author: string;
 
-  @Prop()
-  taskId: string;
+  @Prop({ required: true })
+  content: string;
+
+  // @Prop({ required: true, type: Types.ObjectId, ref: 'Task' })
+  @Prop({ required: true, type: Types.ObjectId, ref: Task.name })
+  taskId: Types.ObjectId;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

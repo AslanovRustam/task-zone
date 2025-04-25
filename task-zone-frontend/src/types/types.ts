@@ -3,6 +3,7 @@ export interface Task {
   name: string;
   isDone: boolean;
   status: string;
+  comments?: Comment[];
 }
 
 export interface TasksState {
@@ -18,3 +19,12 @@ export const STATUS = {
   IN_WORK: "in work",
   COMPLETED: "completed",
 } as const;
+
+export interface Comment {
+  author: string;
+  content: string;
+  taskId: Task | string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+}

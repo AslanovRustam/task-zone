@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Comment } from './comment.shema';
 
 @Injectable()
 export class CommentsService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  constructor(
+    @InjectModel(Comment.name) private commentModel: Model<Comment>,
+  ) {}
+
+  async findAll() {
+    return this.commentModel.find().populate('taskId').exec();
   }
 
-  findAll() {
-    return `This action returns all comments`;
+  async findOne(id: string) {
+    return this.commentModel.findById(id).populate('taskId').exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  async create(createCommentDto: CreateCommentDto) {
+    const createdComment = new this.commentModel(createCommentDto);
+    return createdComment.save();
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(id: string, updateCommentDto: UpdateCommentDto) {
+    return this.commentModel.findByIdAndUpdate(id, updateCommentDto, {
+      new: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id: string) {
+    return this.commentModel.findByIdAndDelete(id);
+  }
+
+  async findByTaskId(taskId: string) {
+    return this.commentModel.find({ taskId }).exec();
   }
 }

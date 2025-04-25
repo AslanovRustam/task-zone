@@ -9,4 +9,5 @@ export const DEFAULT_TASK = {
   name: "",
   isDone: false,
   status: STATUS.NEW,
+  comments: [],
 };

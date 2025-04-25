@@ -10,10 +10,14 @@ import {
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { CommentsService } from 'src/comments/comments.service';
 
 @Controller('tasks')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly commentService: CommentsService,
+  ) {}
 
   @Get()
   findAll() {
@@ -38,5 +42,10 @@ export class TaskController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.taskService.remove(id);
+  }
+
+  @Get(':id/comments')
+  getComments(@Param('id') id: string) {
+    return this.commentService.findByTaskId(id);
   }
 }

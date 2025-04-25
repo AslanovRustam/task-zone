@@ -38,7 +38,7 @@ export default function Navbar() {
           </Stack>
         </List>
       </nav>
-      <Divider sx={{ mb: 2 }} />
+      <Divider sx={{ mb: 2, mt: 2 }} />
     </Box>
   );
 }
