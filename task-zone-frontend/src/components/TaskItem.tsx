@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { Dispatch, SetStateAction, useState, type FC } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Button, TableCell, TableRow } from "@mui/material";
@@ -12,9 +12,10 @@ import { Task } from "../types/types";
 interface TaskItemProps {
   task: Task;
   taskNumber: number;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
-const TaskItem: FC<TaskItemProps> = ({ task, taskNumber }) => {
+const TaskItem: FC<TaskItemProps> = ({ task, taskNumber, setCurrentPage }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const isLoading = useSelector(selectIsLoading);
@@ -94,7 +95,11 @@ const TaskItem: FC<TaskItemProps> = ({ task, taskNumber }) => {
         <EditTask onClose={toggleEditModal} task={task} />
       </TaskModal>
       <TaskModal open={deleteOpen} onClose={handleTaskDeleteModal}>
-        <DeleteTask onClose={handleTaskDeleteModal} task={task} />
+        <DeleteTask
+          onClose={handleTaskDeleteModal}
+          task={task}
+          setCurrentPage={setCurrentPage}
+        />
       </TaskModal>
     </>
   );

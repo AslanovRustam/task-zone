@@ -9,6 +9,7 @@ import {
   TableRow,
   Paper,
   Button,
+  Typography,
 } from "@mui/material";
 import { selectAllTasks } from "../store/selectors";
 import TaskItem from "./TaskItem";
@@ -77,21 +78,40 @@ const TaskList: FC<TaskListProps> = () => {
               </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {paginatedTasks.map((task, idx) => (
-              <TaskItem key={task.id} task={task} taskNumber={idx + 1} />
-            ))}
-          </TableBody>
+          {tasks.length && (
+            <TableBody>
+              {paginatedTasks.map((task, idx) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  taskNumber={idx + 1}
+                  setCurrentPage={setCurrentPage}
+                />
+              ))}
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
+      {!tasks.length && (
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          align="center"
+          width={"100%"}
+        >
+          Tasks not found...
+        </Typography>
+      )}
 
-      <PaginationCmp
-        currentPage={currentPage}
-        rowsPerPage={rowsPerPage}
-        setCurrentPage={setCurrentPage}
-        setRowsPerPage={setRowsPerPage}
-        tasks={tasks}
-      />
+      {tasks.length > rowsPerPage && (
+        <PaginationCmp
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          setCurrentPage={setCurrentPage}
+          setRowsPerPage={setRowsPerPage}
+          tasks={tasks}
+        />
+      )}
 
       <TaskModal open={open} onClose={toggleModal}>
         <EditTask onClose={toggleModal} task={DEFAULT_TASK} newTask />

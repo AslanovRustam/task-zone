@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import type { FC } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import { Task } from "../types/types";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -9,14 +9,18 @@ import { deleteTask } from "../store/task/operations";
 interface DeleteTaskProps {
   onClose: () => void;
   task: Task;
+  setCurrentPage?: Dispatch<SetStateAction<number>>;
 }
 
-const DeleteTask: FC<DeleteTaskProps> = ({ onClose, task }) => {
+const DeleteTask: FC<DeleteTaskProps> = ({ onClose, task, setCurrentPage }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async () => {
     try {
       await dispatch(deleteTask(task.id!));
+      if (setCurrentPage) {
+        setCurrentPage(1);
+      }
       toast.success("Task deleted successfully");
     } catch (error) {
       toast.error("Task is not deleted!");

@@ -26,7 +26,6 @@ export class TaskService {
 
     const comments = await this.commentModel.find({ taskId: id }).exec();
 
-    // return task;
     return {
       ...task.toJSON(),
       comments,
