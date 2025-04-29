@@ -10,4 +10,5 @@ export const DEFAULT_TASK = {
   isDone: false,
   status: STATUS.NEW,
   comments: [],
+  userId: "",
 };

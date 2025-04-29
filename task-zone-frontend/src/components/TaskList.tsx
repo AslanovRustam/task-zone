@@ -11,7 +11,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { selectAllTasks } from "../store/selectors";
+import { selectUserTasks } from "../store/selectors";
 import TaskItem from "./TaskItem";
 import TaskModal from "./TaskModal";
 import EditTask from "./EditTask";
@@ -24,7 +24,7 @@ const TaskList: FC<TaskListProps> = () => {
   const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const tasks = useSelector(selectAllTasks);
+  const tasks = useSelector(selectUserTasks);
 
   const toggleModal = () => {
     setOpen(!open);

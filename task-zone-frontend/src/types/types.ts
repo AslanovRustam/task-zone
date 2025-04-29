@@ -4,6 +4,7 @@ export interface Task {
   isDone: boolean;
   status: string;
   comments?: Comment[];
+  userId: string;
 }
 
 export interface TasksState {

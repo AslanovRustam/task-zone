@@ -111,8 +111,6 @@ export const updateCommentAndRefreshTask = createAsyncThunk<
       updateCurrentTask({ ...currentTask, comments: updatedComments })
     );
 
-    console.log("currentTask", currentTask);
-    console.log("updatedComments", updatedComments);
     return updatedComments;
   } catch (error) {
     return thunkAPI.rejectWithValue(

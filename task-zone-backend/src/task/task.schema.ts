@@ -14,7 +14,7 @@ export class Task {
   @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ default: false })
   isDone: boolean;
 
   @Prop({
@@ -23,6 +23,9 @@ export class Task {
     default: TaskStatusEnum.NEW,
   })
   status: TaskStatusEnum;
+
+  @Prop({ required: true })
+  userId: string;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);

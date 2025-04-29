@@ -11,6 +11,8 @@ export type UserT = {
   password: string;
 };
 
+export type UserWithTasks = User & { tasks: Task[] };
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -21,25 +23,32 @@ export class UsersService {
   async findAll() {
     return await this.userModel.find().exec();
   }
-  // async findOne(id: string) {
-  // return await this.userModel.findOne({ username }).exec();
-  // const user = await this.userModel.findById(id).exec();
-
-  // if (!user)
-  //   return {
-  //     message: `User with id ${id} not finded`,
-  //   };
-
-  // const comments = await this.commentModel.find({ taskId: id }).exec();
-  //    return user;
-  // }
 
   async findOne(username: string) {
     const user = await this.userModel.findOne({ username }).exec();
     if (!user) {
       throw new NotFoundException(`User with username "${username}" not found`);
     }
-    return user;
+    const tasks = await this.taskModel.find({ userId: user.id }).exec();
+    return {
+      ...user.toJSON(),
+      tasks,
+    };
+  }
+
+  async findOneById(id: string): Promise<UserWithTasks> {
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
+    }
+
+    const tasks = await this.taskModel.find({ userId: id }).exec();
+
+    return {
+      ...user.toJSON(),
+      tasks,
+    };
   }
 
   async create(createUserDto: CreateUserDto) {

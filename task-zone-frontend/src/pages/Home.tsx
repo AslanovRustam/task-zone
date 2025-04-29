@@ -1,12 +1,9 @@
-import Button from "@mui/material/Button";
-import { PATH } from "../constants";
+import Login from "../components/Login";
 
 export default function Home() {
   return (
     <div>
-      <Button variant="contained" color="primaryNew" href={PATH.TASKS}>
-        <span>Go to tasks</span>
-      </Button>
+      <Login />
     </div>
   );
 }

@@ -67,4 +67,10 @@ export class TaskService {
 
     return { message: 'Task deleted successfully' };
   }
+
+  async findTaskByUserId(userId: string) {
+    const tasks = await this.taskModel.find({ userId }).exec();
+
+    return tasks;
+  }
 }
