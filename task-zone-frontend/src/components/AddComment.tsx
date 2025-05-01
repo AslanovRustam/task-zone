@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { toast } from "react-toastify";
 import { addComment } from "../store/task/operations";
-import { selectIsLoading } from "../store/selectors";
+import { selectIsLoading, selectUserName } from "../store/selectors";
+import { Loader } from "./Loader/Loader";
 
 interface AddCommentProps {
   onClose: () => void;
@@ -18,8 +19,9 @@ interface IComment {
 }
 
 const AddComment: FC<AddCommentProps> = ({ onClose, id }) => {
+  const userName = useSelector(selectUserName);
   const [comment, setComment] = useState<IComment>({
-    author: "",
+    author: userName || "",
     content: "",
     taskId: id,
   });
@@ -31,12 +33,15 @@ const AddComment: FC<AddCommentProps> = ({ onClose, id }) => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     const { name, value }: { name: string; value: string } = e.target;
-    console.log(name, value);
 
     setComment((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
+    if (comment.content === "") {
+      toast.error("Please, leave the comment");
+      return;
+    }
     try {
       await dispatch(addComment(comment));
       toast.success("Commit added successfully");
@@ -49,12 +54,14 @@ const AddComment: FC<AddCommentProps> = ({ onClose, id }) => {
 
   return (
     <>
+      {isLoading && <Loader />}
       <TextField
         label="Author"
         value={comment.author}
         name="author"
         onChange={handleInputChange}
         fullWidth
+        disabled
       />
       <TextField
         label="Leave your comment"

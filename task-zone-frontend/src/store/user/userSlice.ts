@@ -1,8 +1,8 @@
 import { createSlice, isPending, isRejected } from "@reduxjs/toolkit";
 import type { PayloadAction, UnknownAction } from "@reduxjs/toolkit";
-import { loginUser } from "./operations";
+import { loginUser, signInUser } from "./operations";
 import { Task } from "../../types/types";
-import { fetchUserTasks } from "../task/operations";
+import { deleteTask, fetchUserTasks, updateTask } from "../task/operations";
 
 export interface User {
   id: string;
@@ -55,33 +55,51 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       loginUser.fulfilled,
-      (state, action: PayloadAction<{ user: User; token: string }>) => {
+      (state, action: PayloadAction<{ user: User; token: string | null }>) => {
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
-        state.isAuthenticated = true;
+        state.isAuthenticated = !!action.payload.token;
         state.error = null;
       }
     );
+    builder.addCase(signInUser.fulfilled, (state, { payload }) => {
+      state.token = payload;
+      state.loading = false;
+    });
     builder.addCase(fetchUserTasks.fulfilled, (state, { payload }) => {
       if (state.user) {
         state.user.tasks = payload;
+        state.loading = false;
       }
     });
-    //   .addCase(fetchCurrentUser.pending, handlePending)
-    //   .addCase(fetchCurrentUser.rejected, handleRejected)
-    //   .addCase(
-    //     fetchCurrentUser.fulfilled,
-    //     (state, action: PayloadAction<User>) => {
-    //       state.loading = false;
-    //       state.user = action.payload;
-    //       state.isAuthenticated = true;
-    //       state.error = null;
-    //     }
-    //   );
+    builder.addCase(updateTask.fulfilled, (state, { payload }) => {
+      if (state.user && state.user.tasks) {
+        state.user.tasks = state.user.tasks.map((task) =>
+          task.id === payload.id ? payload : task
+        );
+      }
+      state.loading = false;
+    });
+    builder.addCase(deleteTask.fulfilled, (state, { payload }) => {
+      const newTasks = state.user?.tasks.filter(
+        (task) => task.id !== payload?.id
+      );
+
+      if (state.user && newTasks) {
+        state.user.tasks = newTasks;
+      }
+      state.loading = false;
+    });
     // matchers for pending and rejected
-    builder.addMatcher(isPending(loginUser, fetchUserTasks), handlePending);
-    builder.addMatcher(isRejected(loginUser, fetchUserTasks), handleRejected);
+    builder.addMatcher(
+      isPending(loginUser, signInUser, fetchUserTasks),
+      handlePending
+    );
+    builder.addMatcher(
+      isRejected(loginUser, signInUser, fetchUserTasks),
+      handleRejected
+    );
   },
 });
 

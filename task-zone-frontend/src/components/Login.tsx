@@ -1,17 +1,14 @@
-import { Box, Button, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { AppDispatch } from "../store";
 import { loginUser } from "../store/user/operations";
-import { toast } from "react-toastify";
 import { selectIsAuthenticated } from "../store/selectors";
 
-type Props = {};
-
-function Login({}: Props) {
+function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
-
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -25,20 +22,30 @@ function Login({}: Props) {
 
   const handleSubmit = async () => {
     try {
-      dispatch(loginUser(formData));
+      const resultAction = await dispatch(loginUser(formData)).unwrap();
+      if (resultAction) {
+        navigate("/tasks");
+      }
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
         toast.error("An unknown error occurred");
       }
-    } finally {
-      navigate("/tasks");
     }
   };
 
   return (
     <>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        align="center"
+        width={"100%"}
+        color="primary"
+      >
+        Login
+      </Typography>
       {isAuthenticated ? (
         <Navigate to="/tasks" replace />
       ) : (

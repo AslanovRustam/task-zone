@@ -48,13 +48,18 @@ export class TaskService {
       .findByIdAndUpdate(id, updateTaskDto, { new: true })
       .exec();
 
+    const comments = await this.commentModel.find({ taskId: id }).exec();
+
     if (!updatedTask) {
       return {
         message: `Task with id:${id} not found`,
       };
     }
 
-    return updatedTask;
+    return {
+      ...updatedTask.toJSON(),
+      comments,
+    };
   }
 
   async remove(id: string) {

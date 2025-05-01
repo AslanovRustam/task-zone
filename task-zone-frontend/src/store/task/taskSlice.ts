@@ -3,10 +3,8 @@ import type { UnknownAction } from "@reduxjs/toolkit";
 import {
   addComment,
   createTask,
-  deleteTask,
   fetchAllTasks,
   fetchTaskById,
-  updateTask,
 } from "./operations";
 import { Task } from "../../types/types";
 
@@ -58,25 +56,8 @@ export const taskSlice = createSlice({
       state.currentTask = payload;
       state.loading = false;
     });
-    //update task
-    builder.addCase(updateTask.fulfilled, (state, { payload }) => {
-      const newTasks = state.items.map((task) =>
-        task.id === payload.id ? payload : task
-      );
-
-      state.items = newTasks;
-      state.loading = false;
-    });
-    //delete task
-    builder.addCase(deleteTask.fulfilled, (state, { payload }) => {
-      const newTasks = state.items.filter((task) => task.id !== payload?.id);
-
-      state.items = newTasks;
-      state.loading = false;
-    });
     //create task
-    builder.addCase(createTask.fulfilled, (state, { payload }) => {
-      state.items = payload;
+    builder.addCase(createTask.fulfilled, (state, _) => {
       state.loading = false;
     });
     //add comment
@@ -86,26 +67,12 @@ export const taskSlice = createSlice({
     });
     // matchers for pending and rejected
     builder.addMatcher(
-      isPending(
-        fetchAllTasks,
-        updateTask,
-        deleteTask,
-        createTask,
-        fetchTaskById,
-        addComment
-      ),
+      isPending(fetchAllTasks, createTask, fetchTaskById, addComment),
       handlePending
     );
 
     builder.addMatcher(
-      isRejected(
-        fetchAllTasks,
-        updateTask,
-        deleteTask,
-        createTask,
-        fetchTaskById,
-        addComment
-      ),
+      isRejected(fetchAllTasks, createTask, fetchTaskById, addComment),
       handleRejected
     );
   },

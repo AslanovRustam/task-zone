@@ -5,13 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { AppDispatch } from "../store";
 import { logout } from "../store/user/userSlice";
-import { selectIsAuthenticated, selectUserName } from "../store/selectors";
+import {
+  selectIsAuthenticated,
+  selectIsLoading,
+  selectUserName,
+} from "../store/selectors";
 import Navbar from "./Navbar";
 import { Loader } from "./Loader/Loader";
 
 export default function Layout() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userName = useSelector(selectUserName);
+  const isLoading = useSelector(selectIsLoading);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -39,7 +44,7 @@ export default function Layout() {
       ) : (
         <Navbar />
       )}
-
+      {isLoading && <Loader />}
       <Suspense fallback={<Loader />}>
         <Outlet />
       </Suspense>
