@@ -1,11 +1,10 @@
 import * as React from "react";
-import { NavLink, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -13,6 +12,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import AppTheme from "./Themes/AppTheme";
 import { AppDispatch } from "../store";
 import { signInUser } from "../store/user/operations";
@@ -22,7 +25,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: "column",
   alignSelf: "center",
   width: "100%",
-  padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: "auto",
   [theme.breakpoints.up("sm")]: {
@@ -38,10 +40,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
   minHeight: "100%",
-  padding: theme.spacing(2),
-  [theme.breakpoints.up("sm")]: {
-    padding: theme.spacing(4),
-  },
+  [theme.breakpoints.up("sm")]: {},
   "&::before": {
     content: '""',
     display: "block",
@@ -63,25 +62,35 @@ export default function SignUpMui(props: { disableCustomTheme?: boolean }) {
   const [userNameErrorMessage, setuserNameErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
+  const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setShowPassword((prev: boolean) => !prev);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (userNameError || passwordError) {
       return;
     }
+
     const data = new FormData(event.currentTarget);
     const credentials = {
       username: data.get("userName") as string,
       password: data.get("password") as string,
     };
+
     try {
       const resultAction = await dispatch(signInUser(credentials)).unwrap();
-      if (resultAction) {
-        navigate("/auth/login", { replace: true });
-      }
+      if (!resultAction) return;
+
+      navigate("/auth/login", { replace: true });
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -91,9 +100,13 @@ export default function SignUpMui(props: { disableCustomTheme?: boolean }) {
     }
   };
 
-  const validateInputs = () => {
-    const userName = document.getElementById("userName") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
+  const validateInputs = (): boolean => {
+    const userName = document.getElementById(
+      "userNameSign"
+    ) as HTMLInputElement;
+    const password = document.getElementById(
+      "passwordSign"
+    ) as HTMLInputElement;
 
     let isValid = true;
 
@@ -141,60 +154,78 @@ export default function SignUpMui(props: { disableCustomTheme?: boolean }) {
               gap: 2,
             }}
           >
-            <FormControl>
-              <FormLabel htmlFor="userName">UserName</FormLabel>
-              <TextField
-                error={userNameError}
-                helperText={userNameErrorMessage}
-                id="userName"
-                type="userName"
-                name="userName"
-                placeholder="John"
-                autoComplete="userName"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                color={userNameError ? "error" : "primary"}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <TextField
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                name="password"
-                placeholder="••••••"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                autoFocus
-                required
-                fullWidth
-                variant="outlined"
-                color={passwordError ? "error" : "primary"}
-              />
-            </FormControl>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                gap: 2,
+              }}
+            >
+              <FormControl>
+                <FormLabel htmlFor="userName">UserName</FormLabel>
+                <TextField
+                  error={userNameError}
+                  helperText={userNameErrorMessage}
+                  id="userNameSign"
+                  type="userName"
+                  name="userName"
+                  placeholder="John"
+                  autoComplete="userName"
+                  autoFocus
+                  required
+                  fullWidth
+                  variant="outlined"
+                  color={userNameError ? "error" : "primary"}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <TextField
+                  error={passwordError}
+                  helperText={passwordErrorMessage}
+                  name="password"
+                  placeholder="••••••"
+                  type={showPassword ? "text" : "password"}
+                  id="passwordSign"
+                  autoComplete="current-password"
+                  autoFocus
+                  required
+                  fullWidth
+                  variant="outlined"
+                  color={passwordError ? "error" : "primary"}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePasswordVisibility}
+                            edge="end"
+                            sx={{
+                              border: "none",
+                              transition: "all 0.3s ease-in-out",
+                              ":hover": {
+                                opacity: 0.5,
+                              },
+                            }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+              </FormControl>
+            </Box>
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              sx={{ backgroundColor: "#383837", backgroundImage: "none" }}
               onClick={validateInputs}
             >
               Sign Up
             </Button>
-          </Box>
-          <Divider>or</Divider>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Typography sx={{ textAlign: "center" }}>
-              Do you have an account?{" "}
-              <NavLink
-                to="/auth/login"
-                style={{ padding: "4px 6px", color: "inherit" }}
-              >
-                Login
-              </NavLink>
-            </Typography>
           </Box>
         </Card>
       </SignInContainer>

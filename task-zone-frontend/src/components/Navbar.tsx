@@ -33,7 +33,7 @@ export default function Navbar() {
                   borderRadius: 1,
                   transition: "background-color 0.3s",
                   "&:hover": {
-                    backgroundColor: "#000000",
+                    backgroundColor: "#383837",
                     color: "#fff",
                   },
                 }}
@@ -48,7 +48,7 @@ export default function Navbar() {
                       borderRadius: 1,
                       transition: "background-color 0.3s",
                       "&:hover": {
-                        backgroundColor: "#000000",
+                        backgroundColor: "#383837",
                         color: "#fff",
                       },
                     }}

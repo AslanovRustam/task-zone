@@ -45,7 +45,6 @@ const CommentItem: FC<CommentItemProps> = ({ comment, currentTask }) => {
         content: editedContent,
       })
     );
-    console.log("New content:", editedContent);
     setIsEditing(false);
   };
 

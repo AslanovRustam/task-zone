@@ -9,6 +9,7 @@ export type UserT = {
   userId: number;
   username: string;
   password: string;
+  avatarUrl?: string;
 };
 
 export type UserWithTasks = User & { tasks: Task[] };
@@ -56,5 +57,21 @@ export class UsersService {
     await createdUser.save();
 
     return await this.findOne(createUserDto.username);
+  }
+
+  async updateAvatar(userId: string, avatarUrl: string) {
+    const user = await this.userModel.findByIdAndUpdate(
+      userId,
+      { avatarUrl },
+      { new: true },
+    );
+    const tasks = await this.taskModel.find({ userId: userId }).exec();
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return {
+      ...user.toJSON(),
+      tasks,
+    };
   }
 }

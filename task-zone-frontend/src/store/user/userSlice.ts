@@ -1,19 +1,22 @@
 import { createSlice, isPending, isRejected } from "@reduxjs/toolkit";
 import type { PayloadAction, UnknownAction } from "@reduxjs/toolkit";
-import { loginUser, signInUser } from "./operations";
+import { toast } from "react-toastify";
+import { loginUser, signInUser, updateUser } from "./operations";
 import { Task } from "../../types/types";
 import { deleteTask, fetchUserTasks, updateTask } from "../task/operations";
 
 export interface User {
   id: string;
   username: string;
-  password: string;
+  // password: string;
   tasks: Task[];
+  avatarUrl?: string;
 }
 
 export interface AuthState {
   user: User | null;
   token: string | null;
+  // refreshToken: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -22,6 +25,7 @@ export interface AuthState {
 const initialState: AuthState = {
   user: null,
   token: null,
+  // refreshToken: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -32,11 +36,8 @@ const handlePending = (state: AuthState): void => {
   state.error = null;
 };
 
-const handleRejected = (
-  state: AuthState,
-  //can use both variants PayloadAction<unknown> or UnknownAction
-  action: UnknownAction
-): void => {
+const handleRejected = (state: AuthState, action: UnknownAction): void => {
+  toast.error(action.payload as string);
   state.loading = false;
   state.error =
     typeof action.payload === "string" ? action.payload : "An error occurred";
@@ -91,13 +92,20 @@ export const userSlice = createSlice({
       }
       state.loading = false;
     });
+    //update avatar
+    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
+      if (state.user && state.user.avatarUrl) {
+        state.user.avatarUrl = payload.avatarUrl;
+        state.loading = false;
+      }
+    });
     // matchers for pending and rejected
     builder.addMatcher(
-      isPending(loginUser, signInUser, fetchUserTasks),
+      isPending(loginUser, signInUser, fetchUserTasks, updateUser),
       handlePending
     );
     builder.addMatcher(
-      isRejected(loginUser, signInUser, fetchUserTasks),
+      isRejected(loginUser, signInUser, fetchUserTasks, updateUser),
       handleRejected
     );
   },

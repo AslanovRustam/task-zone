@@ -73,13 +73,12 @@ const AddComment: FC<AddCommentProps> = ({ onClose, id }) => {
       <Box display="flex" justifyContent="space-evenly" gap={2}>
         <Button
           variant="contained"
-          color="error"
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={isLoading || !comment.content}
         >
           Leave the comment
         </Button>
-        <Button variant="contained" onClick={onClose}>
+        <Button variant="outlined" color="error" onClick={onClose}>
           Cancel
         </Button>
       </Box>

@@ -7,6 +7,7 @@ import {
   fetchTaskById,
 } from "./operations";
 import { Task } from "../../types/types";
+import { toast } from "react-toastify";
 
 export interface InitialState {
   items: Task[];
@@ -32,6 +33,7 @@ const handleRejected = (
   //can use both variants PayloadAction<unknown> or UnknownAction
   action: UnknownAction
 ): void => {
+  toast.error(action.payload as string);
   state.loading = false;
   state.error =
     typeof action.payload === "string" ? action.payload : "An error occurred";
