@@ -30,7 +30,7 @@ const PaginationCmp: FC<PaginationCmpProps> = ({
     setCurrentPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: SelectChangeEvent<number>) => {
+  const handleChangeRowsPerPage = (event: SelectChangeEvent<number>): void => {
     setRowsPerPage(Number(event.target.value));
     setCurrentPage(1);
   };

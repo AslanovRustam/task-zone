@@ -14,12 +14,12 @@ function SignUp() {
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  ): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     try {
       const resultAction = await dispatch(signInUser(formData)).unwrap();
       if (resultAction) {
@@ -28,8 +28,6 @@ function SignUp() {
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
-      } else {
-        toast.error("An unknown error occurred");
       }
     }
   };

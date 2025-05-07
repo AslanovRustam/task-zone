@@ -70,6 +70,8 @@ export class TaskService {
         message: `Something went wrong, task with id:${id} not deleted`,
       };
 
+    await this.commentModel.deleteMany({ taskId: id });
+
     return { message: 'Task deleted successfully' };
   }
 

@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { instance } from "../task/operations";
 import { RootState } from "..";
+import { AuthActionTypes } from "../../types/types";
+import { instance, setAuthToken } from "../../utils/api";
 
 export const loginUser = createAsyncThunk(
-  "auth/login",
+  AuthActionTypes.LOGIN,
   async (credentials: { username: string; password: string }, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     let token = state.user.token;
@@ -14,14 +15,9 @@ export const loginUser = createAsyncThunk(
         token = tokenResponse.data.access_token;
       }
 
-      const userResponse = await instance.get(
-        `/users/${credentials.username}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      setAuthToken(token);
+
+      const userResponse = await instance.get(`/users/${credentials.username}`);
 
       const user = {
         id: userResponse.data.id,
@@ -35,19 +31,21 @@ export const loginUser = createAsyncThunk(
         user: user,
       };
     } catch (error: any) {
-      // toast.error(error.response.data.message);
       return thunkAPI.rejectWithValue(error.response.data.message);
     }
   }
 );
 
 export const signInUser = createAsyncThunk(
-  "auth/signIn",
+  AuthActionTypes.SIGN_IN,
   async (credentials: { username: string; password: string }, thunkAPI) => {
     try {
       const tokenResponse = await instance.post("/users", credentials);
+      const token = tokenResponse.data.access_token;
 
-      return tokenResponse.data.access_token;
+      setAuthToken(token);
+
+      return token;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -55,10 +53,9 @@ export const signInUser = createAsyncThunk(
 );
 
 export const updateUser = createAsyncThunk(
-  "user/update",
+  AuthActionTypes.UPDATE,
   async (credentials: { file: File }, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
-    let token = state.user.token;
     let userId = state.user.user?.id;
     try {
       const formData = new FormData();
@@ -68,7 +65,6 @@ export const updateUser = createAsyncThunk(
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -80,22 +76,3 @@ export const updateUser = createAsyncThunk(
     }
   }
 );
-
-// export const refreshUser = createAsyncThunk(
-//   "auth/refresh",
-//   async (_, thunkAPI) => {
-//     const state = thunkAPI.getState() as RootState;
-//     const savedToken = state.user.token;
-
-//     if (!savedToken) {
-//       return thunkAPI.rejectWithValue("Unable to fetch user");
-//     }
-
-//     try {
-//       const response = await instance.get("/users/current");
-//       return response.data;
-//     } catch (error: any) {
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   }
-// );

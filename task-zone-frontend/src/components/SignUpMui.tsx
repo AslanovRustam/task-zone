@@ -67,13 +67,17 @@ export default function SignUpMui(props: { disableCustomTheme?: boolean }) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const togglePasswordVisibility = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void => {
     e.preventDefault();
 
     setShowPassword((prev: boolean) => !prev);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
 
     if (userNameError || passwordError) {
@@ -94,8 +98,6 @@ export default function SignUpMui(props: { disableCustomTheme?: boolean }) {
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
-      } else {
-        toast.error("An unknown error occurred");
       }
     }
   };

@@ -2,21 +2,12 @@ import { createSlice, isPending, isRejected } from "@reduxjs/toolkit";
 import type { PayloadAction, UnknownAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { loginUser, signInUser, updateUser } from "./operations";
-import { Task } from "../../types/types";
+import { User } from "../../types/types";
 import { deleteTask, fetchUserTasks, updateTask } from "../task/operations";
-
-export interface User {
-  id: string;
-  username: string;
-  // password: string;
-  tasks: Task[];
-  avatarUrl?: string;
-}
 
 export interface AuthState {
   user: User | null;
   token: string | null;
-  // refreshToken: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -25,7 +16,6 @@ export interface AuthState {
 const initialState: AuthState = {
   user: null,
   token: null,
-  // refreshToken: null,
   isAuthenticated: false,
   loading: false,
   error: null,

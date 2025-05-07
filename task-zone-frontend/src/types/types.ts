@@ -29,3 +29,17 @@ export interface Comment {
   updatedAt: string;
   id: string;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  // password: string;
+  tasks: Task[];
+  avatarUrl?: string;
+}
+
+export enum AuthActionTypes {
+  LOGIN = "auth/login",
+  SIGN_IN = "auth/signIn",
+  UPDATE = "user/update",
+}

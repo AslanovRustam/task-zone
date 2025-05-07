@@ -15,7 +15,7 @@ interface DeleteTaskProps {
 const DeleteTask: FC<DeleteTaskProps> = ({ onClose, task, setCurrentPage }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     try {
       await dispatch(deleteTask(task.id!));
       if (setCurrentPage) {
@@ -38,10 +38,23 @@ const DeleteTask: FC<DeleteTaskProps> = ({ onClose, task, setCurrentPage }) => {
         ?
       </Typography>
       <Box display="flex" justifyContent="space-evenly" gap={2}>
-        <Button variant="contained" color="error" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSubmit();
+          }}
+        >
           Delete
         </Button>
-        <Button variant="contained" onClick={onClose}>
+        <Button
+          variant="contained"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+        >
           Cancel
         </Button>
       </Box>

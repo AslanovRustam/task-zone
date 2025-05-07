@@ -19,22 +19,24 @@ export default function UserUpdate({ onClose, userAvatar }: Props) {
 
   const theme = useTheme();
 
-  const handleFile = (file: File) => {
+  const handleFile = (file: File): void => {
     setAvatarFile(file);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const file = event.target.files?.[0];
     if (file) {
       handleFile(file);
     }
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (): void => {
     fileInputRef.current?.click();
   };
 
-  const handleAvatarUpdate = async () => {
+  const handleAvatarUpdate = async (): Promise<void> => {
     if (!avatarFile) return;
     try {
       dispatch(updateUser({ file: avatarFile }));
@@ -45,7 +47,7 @@ export default function UserUpdate({ onClose, userAvatar }: Props) {
     }
   };
 
-  const handleDrop = (event: React.DragEvent) => {
+  const handleDrop = (event: React.DragEvent): void => {
     event.preventDefault();
     setIsDragging(false);
     const file = event.dataTransfer.files?.[0];
@@ -54,12 +56,12 @@ export default function UserUpdate({ onClose, userAvatar }: Props) {
     }
   };
 
-  const handleDragOver = (event: React.DragEvent) => {
+  const handleDragOver = (event: React.DragEvent): void => {
     event.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
+  const handleDragLeave = (): void => {
     setIsDragging(false);
   };
 

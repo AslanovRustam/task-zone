@@ -19,7 +19,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, currentTask }) => {
   const [editedContent, setEditedContent] = useState<string>(comment.content);
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleDeleteComment = () => {
+  const handleDeleteComment = (): void => {
     if (!currentTask) return;
     dispatch(
       deleteCommentAndRefreshTask({
@@ -29,16 +29,16 @@ const CommentItem: FC<CommentItemProps> = ({ comment, currentTask }) => {
     );
   };
 
-  const handleEditMode = () => {
+  const handleEditMode = (): void => {
     setIsEditing(!isEditing);
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = (): void => {
     setIsEditing(false);
     setEditedContent(comment.content);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = (): void => {
     dispatch(
       updateCommentAndRefreshTask({
         commentId: comment.id,

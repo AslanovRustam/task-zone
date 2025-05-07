@@ -39,7 +39,7 @@ const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
       e:
         | ChangeEvent<HTMLInputElement | { value: string }>
         | SelectChangeEvent<string>
-    ) => {
+    ): void => {
       let value: string | boolean = e.target.value;
 
       if (field === "isDone" && "checked" in e.target) {
@@ -51,7 +51,7 @@ const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
       }));
     };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     try {
       if (newTask && user?.id) {
         await dispatch(createTask({ ...localTask, userId: user?.id })).unwrap();
@@ -78,12 +78,14 @@ const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
         label="Task name"
         value={localTask ? localTask.name : ""}
         onChange={handleChange("name")}
+        onClick={(e) => e.stopPropagation()}
         fullWidth
       />
 
       <Select
         value={localTask ? localTask.status : STATUS.NEW}
         onChange={handleChange("status")}
+        onClick={(e) => e.stopPropagation()}
         fullWidth
       >
         {Object.entries(STATUS).map(([key, value]) => (
@@ -97,6 +99,7 @@ const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
         display="flex"
         alignItems="center"
         sx={{ cursor: "pointer" }}
+        onClick={(e) => e.stopPropagation()}
       >
         <Checkbox
           checked={localTask ? localTask.isDone : false}
@@ -106,10 +109,24 @@ const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
       </Box>
 
       <Box display="flex" justifyContent="space-between">
-        <Button variant="contained" onClick={handleSubmit} disabled={isLoading}>
+        <Button
+          variant="contained"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSubmit();
+          }}
+          disabled={isLoading}
+        >
           Save
         </Button>
-        <Button variant="contained" color="error" onClick={onClose}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+        >
           Cancel
         </Button>
       </Box>

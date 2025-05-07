@@ -27,11 +27,11 @@ export default function Layout() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     dispatch(logout());
   };
 
-  const toggleUserModal = () => {
+  const toggleUserModal = (): void => {
     setOpenUserModal(!openUserModal);
   };
 

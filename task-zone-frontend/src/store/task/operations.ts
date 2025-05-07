@@ -2,10 +2,7 @@ import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Comment, Task } from "../../types/types";
 import { RootState } from "..";
-
-export const instance = axios.create({
-  baseURL: "http://localhost:3000/api",
-});
+import { instance } from "../../utils/api";
 
 export const fetchAllTasks = createAsyncThunk(
   "tasks/getAll",

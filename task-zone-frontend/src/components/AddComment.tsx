@@ -1,26 +1,21 @@
 import { Box, Button, TextField } from "@mui/material";
 import { ChangeEvent, useState, type FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../store";
 import { toast } from "react-toastify";
+import { Loader } from "./Loader/Loader";
+import { AppDispatch } from "../store";
 import { addComment } from "../store/task/operations";
 import { selectIsLoading, selectUserName } from "../store/selectors";
-import { Loader } from "./Loader/Loader";
+import { Comment } from "../types/types";
 
 interface AddCommentProps {
   onClose: () => void;
   id: string;
 }
 
-interface IComment {
-  author: string;
-  content: string;
-  taskId: string;
-}
-
 const AddComment: FC<AddCommentProps> = ({ onClose, id }) => {
   const userName = useSelector(selectUserName);
-  const [comment, setComment] = useState<IComment>({
+  const [comment, setComment] = useState<Partial<Comment>>({
     author: userName || "",
     content: "",
     taskId: id,
@@ -37,7 +32,7 @@ const AddComment: FC<AddCommentProps> = ({ onClose, id }) => {
     setComment((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (comment.content === "") {
       toast.error("Please, leave the comment");
       return;

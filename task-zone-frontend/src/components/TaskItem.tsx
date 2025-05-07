@@ -1,13 +1,12 @@
-import { Dispatch, SetStateAction, useState, type FC } from "react";
+import { Dispatch, SetStateAction, type FC } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { Button, TableCell, TableRow } from "@mui/material";
-import { selectIsLoading } from "../store/selectors";
-import TaskModal from "./TaskModal";
-import EditTask from "./EditTask";
+import { Box, TableCell, TableRow } from "@mui/material";
 import { Loader } from "./Loader/Loader";
-import DeleteTask from "./DeleteTask";
+import EditTaskModal from "./EditTaskModal";
+import DeleteTaskModal from "./DeleteTaskModal";
 import { Task } from "../types/types";
+import { selectIsLoading } from "../store/selectors";
 
 interface TaskItemProps {
   task: Task;
@@ -16,20 +15,10 @@ interface TaskItemProps {
 }
 
 const TaskItem: FC<TaskItemProps> = ({ task, taskNumber, setCurrentPage }) => {
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
   const isLoading = useSelector(selectIsLoading);
   const navigate = useNavigate();
 
-  const toggleEditModal = () => {
-    setEditOpen(!editOpen);
-  };
-
-  const handleTaskDeleteModal = () => {
-    setDeleteOpen(!deleteOpen);
-  };
-
-  const handleGoToSingleTaks = () => {
+  const handleGoToSingleTaks = (): void => {
     navigate(`/tasks/${task.id}`);
   };
 
@@ -59,29 +48,17 @@ const TaskItem: FC<TaskItemProps> = ({ task, taskNumber, setCurrentPage }) => {
           {task.isDone ? "done" : "in process"}
         </TableCell>
         <TableCell sx={{ width: "15%", zIndex: 1 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleEditModal();
-            }}
-            sx={{ width: "100%", marginBottom: "5px" }}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleTaskDeleteModal();
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 1,
             }}
           >
-            Delete
-          </Button>
+            <EditTaskModal task={task} />
+            <DeleteTaskModal setCurrentPage={setCurrentPage} task={task} />
+          </Box>
         </TableCell>
       </TableRow>
       {isLoading && (
@@ -91,16 +68,6 @@ const TaskItem: FC<TaskItemProps> = ({ task, taskNumber, setCurrentPage }) => {
           </TableCell>
         </TableRow>
       )}
-      <TaskModal open={editOpen} onClose={toggleEditModal}>
-        <EditTask onClose={toggleEditModal} task={task} />
-      </TaskModal>
-      <TaskModal open={deleteOpen} onClose={handleTaskDeleteModal}>
-        <DeleteTask
-          onClose={handleTaskDeleteModal}
-          task={task}
-          setCurrentPage={setCurrentPage}
-        />
-      </TaskModal>
     </>
   );
 };

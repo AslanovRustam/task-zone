@@ -1,25 +1,20 @@
 import { type FC } from "react";
 import { NavLink } from "react-router";
-import { Box, Button, Chip, Divider, Typography } from "@mui/material";
+import { Box, Chip, Divider, Typography } from "@mui/material";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 
-import { Task } from "../types/types";
+import EditTaskModal from "./EditTaskModal";
+import DeleteTaskModal from "./DeleteTaskModal";
+import AddCommentModal from "./AddCommentModal";
 
+import { Task } from "../types/types";
 import { getStatusColor } from "../utils/getStatusColor";
 
 interface SingleTaskCmpProps {
   currentTask: Task;
-  toggleEditModal: () => void;
-  handleTaskDeleteModal: () => void;
-  toggleAddCommentModal: () => void;
 }
 
-const SingleTaskCmp: FC<SingleTaskCmpProps> = ({
-  currentTask,
-  toggleEditModal,
-  handleTaskDeleteModal,
-  toggleAddCommentModal,
-}) => {
+const SingleTaskCmp: FC<SingleTaskCmpProps> = ({ currentTask }) => {
   return (
     <>
       <Box
@@ -109,31 +104,10 @@ const SingleTaskCmp: FC<SingleTaskCmpProps> = ({
         gap={2}
         justifyContent="space-between"
       >
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={toggleAddCommentModal}
-        >
-          Add comment
-        </Button>
+        <AddCommentModal taskId={currentTask.id || ""} />
         <Box gap={2} display="flex" alignItems="center">
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={toggleEditModal}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={handleTaskDeleteModal}
-          >
-            Delete
-          </Button>
+          <EditTaskModal task={currentTask} />
+          <DeleteTaskModal task={currentTask} />
         </Box>
       </Box>
     </>

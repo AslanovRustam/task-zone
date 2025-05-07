@@ -8,27 +8,21 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   Typography,
 } from "@mui/material";
 import { selectUserTasks } from "../store/selectors";
 import TaskItem from "./TaskItem";
-import TaskModal from "./TaskModal";
-import EditTask from "./EditTask";
+
 import PaginationCmp from "./PaginationCmp";
 import { DEFAULT_TASK } from "../constants";
+import EditTaskModal from "./EditTaskModal";
 
 interface TaskListProps {}
 
 const TaskList: FC<TaskListProps> = () => {
-  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const tasks = useSelector(selectUserTasks);
-
-  const toggleModal = () => {
-    setOpen(!open);
-  };
 
   const paginatedTasks = tasks.slice(
     (currentPage - 1) * rowsPerPage,
@@ -68,13 +62,7 @@ const TaskList: FC<TaskListProps> = () => {
               <TableCell
                 sx={{ width: "20%", color: "white", fontWeight: "bold" }}
               >
-                <Button
-                  variant="contained"
-                  color="primaryNew"
-                  onClick={toggleModal}
-                >
-                  New Task
-                </Button>
+                <EditTaskModal task={DEFAULT_TASK} newTask />
               </TableCell>
             </TableRow>
           </TableHead>
@@ -112,10 +100,6 @@ const TaskList: FC<TaskListProps> = () => {
           tasks={tasks}
         />
       )}
-
-      <TaskModal open={open} onClose={toggleModal}>
-        <EditTask onClose={toggleModal} task={DEFAULT_TASK} newTask />
-      </TaskModal>
     </>
   );
 };

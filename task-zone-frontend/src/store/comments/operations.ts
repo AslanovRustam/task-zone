@@ -1,9 +1,9 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { instance } from "../task/operations";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Comment, Task } from "../../types/types";
 import { updateCurrentTask } from "../task/taskSlice";
 import { RootState } from "..";
+import { instance } from "../../utils/api";
 
 export const fetchAllComments = createAsyncThunk(
   "comments/getAll",
