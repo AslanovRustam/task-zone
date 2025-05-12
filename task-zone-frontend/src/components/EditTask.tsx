@@ -110,12 +110,14 @@ const EditTask: FC<EditTaskProps> = ({ onClose, task, newTask }) => {
 
       <Box display="flex" justifyContent="space-between">
         <Button
-          variant="contained"
+          variant="outlined"
           onClick={(e) => {
             e.stopPropagation();
             handleSubmit();
           }}
           disabled={isLoading}
+          color="success"
+          // sx={{ backgroundColor: "yellow " }}
         >
           Save
         </Button>

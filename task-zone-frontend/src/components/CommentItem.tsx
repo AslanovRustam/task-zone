@@ -109,7 +109,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, currentTask }) => {
           </>
         ) : (
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             size="small"
             sx={{ width: "100%" }}

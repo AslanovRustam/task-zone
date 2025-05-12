@@ -14,7 +14,7 @@ export default function AddCommentModal({ taskId }: Props) {
   return (
     <>
       <Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         size="small"
         onClick={toggleAddCommentModal}

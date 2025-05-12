@@ -12,10 +12,9 @@ import {
 } from "@mui/material";
 import { selectUserTasks } from "../store/selectors";
 import TaskItem from "./TaskItem";
-
 import PaginationCmp from "./PaginationCmp";
-import { DEFAULT_TASK } from "../constants";
 import EditTaskModal from "./EditTaskModal";
+import { DEFAULT_TASK } from "../constants";
 
 interface TaskListProps {}
 
@@ -33,19 +32,34 @@ const TaskList: FC<TaskListProps> = () => {
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="task table">
           <TableHead>
-            <TableRow sx={{ backgroundColor: "primary.main" }}>
+            <TableRow sx={{ backgroundColor: "#383837" }}>
               <TableCell
-                sx={{ width: "5%", color: "white", fontWeight: "bold" }}
+                sx={{
+                  width: "5%",
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid white",
+                }}
               >
                 №
               </TableCell>
               <TableCell
-                sx={{ width: "55%", color: "white", fontWeight: "bold" }}
+                sx={{
+                  width: "55%",
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid white",
+                }}
               >
                 Task name
               </TableCell>
               <TableCell
-                sx={{ width: "20%", color: "white", fontWeight: "bold" }}
+                sx={{
+                  width: "20%",
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid white",
+                }}
               >
                 Staus
               </TableCell>
@@ -55,12 +69,18 @@ const TaskList: FC<TaskListProps> = () => {
                   textAlign: "center",
                   color: "white",
                   fontWeight: "bold",
+                  border: "1px solid white",
                 }}
               >
                 Comleted
               </TableCell>
               <TableCell
-                sx={{ width: "20%", color: "white", fontWeight: "bold" }}
+                sx={{
+                  width: "20%",
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid white",
+                }}
               >
                 <EditTaskModal task={DEFAULT_TASK} newTask />
               </TableCell>
