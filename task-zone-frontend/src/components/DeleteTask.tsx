@@ -49,7 +49,8 @@ const DeleteTask: FC<DeleteTaskProps> = ({ onClose, task, setCurrentPage }) => {
           Delete
         </Button>
         <Button
-          variant="contained"
+          variant="outlined"
+          color="warning"
           onClick={(e) => {
             e.stopPropagation();
             onClose();

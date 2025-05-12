@@ -43,7 +43,7 @@ const SingleTaskCmp: FC<SingleTaskCmpProps> = ({ currentTask }) => {
               borderRadius: 2,
               transition: "all 0.3s ease-in-out",
               "&:hover": {
-                backgroundColor: "#000000",
+                backgroundColor: "#383837",
                 color: "#fff",
               },
             }}

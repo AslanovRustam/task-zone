@@ -43,6 +43,7 @@ const TaskItem: FC<TaskItemProps> = ({ task, taskNumber, setCurrentPage }) => {
             width: "15%",
             textAlign: "center",
             color: task.isDone ? "green" : "red",
+            borderRight: "1px solid #383837",
           }}
         >
           {task.isDone ? "done" : "in process"}

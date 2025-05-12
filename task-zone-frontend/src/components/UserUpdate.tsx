@@ -14,6 +14,7 @@ export default function UserUpdate({ onClose, userAvatar }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -21,6 +22,7 @@ export default function UserUpdate({ onClose, userAvatar }: Props) {
 
   const handleFile = (file: File): void => {
     setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const handleFileChange = (
@@ -94,7 +96,11 @@ export default function UserUpdate({ onClose, userAvatar }: Props) {
         }}
       >
         <Avatar
-          src={`http://localhost:3000${userAvatar}` || undefined}
+          src={
+            avatarPreview ||
+            (userAvatar && `http://localhost:3000${userAvatar}`) ||
+            undefined
+          }
           sx={{ width: 100, height: 100 }}
         />
       </Box>

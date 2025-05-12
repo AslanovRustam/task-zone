@@ -15,7 +15,7 @@ export default function DeleteTaskModal({ task, setCurrentPage }: Props) {
   return (
     <>
       <Button
-        variant="contained"
+        variant="outlined"
         color="error"
         size="small"
         onClick={(e) => {

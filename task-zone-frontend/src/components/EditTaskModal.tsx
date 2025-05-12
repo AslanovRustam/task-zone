@@ -15,14 +15,14 @@ export default function EditTaskModal({ task, newTask }: Props) {
   return (
     <>
       <Button
-        variant="contained"
-        color={newTask ? "primaryNew" : "primary"}
+        variant="outlined"
+        color={newTask ? "success" : "primary"}
         size="small"
         onClick={(e) => {
           e.stopPropagation();
           toggleEditModal();
         }}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", backgroundColor: "white" }}
       >
         {newTask ? "New Task" : "Edit"}
       </Button>
